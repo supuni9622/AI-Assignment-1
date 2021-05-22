@@ -1,11 +1,34 @@
 # Water Jug Problem - Breadth First Search Algorithm
 
+# Water jug problem
+
+# 2 Jugs --> 1 jug with 4 leter and other jug 3 leter
+# We have keep 2 leters in 4 leter jug -- Goal state
+# Have unlimieted water supply
+# No measurements in both jugs
+
+# Define the intial state and goal state 
+
+# Initial state ==> (no water in 4 leter jug, no water in 3 leter jug)
+# Goal state ==> (2 leters of water in 4 leter jug, no water in 3 leter jug )
+
+# Define Operations (Rules)
+
+# 1 --> Fill 4 leter jug --> (4,0)
+# 2 --> Fill 3 leter jug --> (0,3)
+# 3 --> Empty 4 leter jug --> (0,0)
+# 4 --> Empty 3 leter jug --> (0,0)
+# 5 --> Pour water from 3 leter jug to 4 leter jug --> (3,0)
+# 6 --> Pour water from 4 leter jug to 3 leter jug --> (1,3)
+
 jug1_capacity = 4
 jug2_capacity = 3
 initial_state = [0,0]
+goal_states= [[2,0] ,[0,2]]
 goal_state1, goal_state2 = [2,0] ,[0,2]
+end = 2
 
-def solution(initial_state,jug1_capacity, jug2_capacity):
+def solution():
 	path = []
 	front = []
 	front.append(initial_state)
@@ -16,8 +39,8 @@ def solution(initial_state,jug1_capacity, jug2_capacity):
 		x = current_node[0]
 		y = current_node[1]
 		path.append(current_node)
-  
-		if x == goal_state1[0] or y == goal_state2[1]:
+
+		if x == end or y == end:
 			print("Found!")
 			return path
    
@@ -61,7 +84,8 @@ def checking(a, b):
 # condition for getting a solution:
 # the goal state should be a multiple of checking(a,b)
 
-if goal_state1[0] % checking(jug1_capacity,jug2_capacity) == 0:
-	print(solution(initial_state,jug1_capacity, jug2_capacity))
-else:
-	print("Couln't find a sollution")
+for i in range(2):
+    if end % checking(jug1_capacity,jug2_capacity) == 0 :
+        print(solution())
+    else:
+        print("Couln't find a sollution")
