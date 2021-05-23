@@ -84,8 +84,8 @@ def checking(a, b):
 # condition for getting a solution:
 # the goal state should be a multiple of checking(a,b)
 
-for i in range(2):
-    if end % checking(jug1_capacity,jug2_capacity) == 0 :
-        print(solution())
-    else:
-        print("Couln't find a sollution")
+
+if end % checking(jug1_capacity,jug2_capacity) == 0 :
+    print(solution())
+else:
+    print("Couln't find a sollution")
