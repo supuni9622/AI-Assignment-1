@@ -14,78 +14,89 @@
 
 # Define Operations (Rules)
 
-# 1 --> Fill 4 leter jug --> (4,0)
-# 2 --> Fill 3 leter jug --> (0,3)
-# 3 --> Empty 4 leter jug --> (0,0)
-# 4 --> Empty 3 leter jug --> (0,0)
-# 5 --> Pour water from 3 leter jug to 4 leter jug --> (3,0)
-# 6 --> Pour water from 4 leter jug to 3 leter jug --> (1,3)
+# 1 --> Fill 4 leter jug --> (4,y)
+# 2 --> Fill 3 leter jug --> (x,3)
+# 3 --> Empty 4 leter jug --> (0,y)
+# 4 --> Empty 3 leter jug --> (x,0)
+# 5 --> Pour from 1st jug to 2nd jug until it's full --> (x-(3 -y) ,3)
+# 6 --> Pour from 2nd jug to 1st jug until it's full --> (4, y - (4-x))
+# 7 -->  Pour all water from 1st to 2nd  --> (0, x+y)
+# 8 -->  Pour all water from 2nd to 1st --> (x+y, 0)
 
 jug1_capacity = 4
 jug2_capacity = 3
 initial_state = [0,0]
-goal_states= [[2,0] ,[0,2]]
-goal_state1, goal_state2 = [2,0] ,[0,2]
-end = 2
+full_capacity_state = [4, 2]
+goal_state= [2,0]
 
 def solution():
 	path = []
-	front = []
-	front.append(initial_state)
+	queue = []
+	queue.append(initial_state)
 	visited_nodes = []
  
-	while(not (not front)):
-		current_node = front.pop()
+	while(not (not queue)):
+		print('queue', queue)
+		current_node = queue.pop(0)
 		x = current_node[0]
 		y = current_node[1]
 		path.append(current_node)
-
-		if x == end or y == end:
+  
+		# Base Case 
+		if x == goal_state[0] and y == goal_state[1]:
 			print("Found!")
 			return path
+		
+		temp_node = current_node.copy()
    
-		# Rule 1 :
-		if current_node[0] < jug1_capacity and ([jug1_capacity, current_node[1]] not in visited_nodes):
-			front.append([jug1_capacity, current_node[1]])
-			visited_nodes.append([jug1_capacity, current_node[1]])
+		# Rule 1 
+		if x < full_capacity_state[0] and ([full_capacity_state[0],y] not in visited_nodes):
+			temp_node = [full_capacity_state[0],y]
+			queue.append(temp_node)
+			visited_nodes.append(temp_node)
 
-		# Rule 2 :
-		if current_node[1] < jug2_capacity and ([current_node[0], jug2_capacity] not in visited_nodes):
-			front.append([current_node[0], jug2_capacity])
-			visited_nodes.append([current_node[0], jug2_capacity])
+		# Rule 2
+		if y < full_capacity_state[1] and ([x, full_capacity_state[1]] not in visited_nodes):
+			temp_node = [x, full_capacity_state[1]]
+			queue.append(temp_node)
+			visited_nodes.append(temp_node)
 
-		# Rule 3 :
-		if current_node[0] > jug1_capacity and ([0, current_node[1]] not in visited_nodes):
-			front.append([0, current_node[1]])
-			visited_nodes.append([0, current_node[1]])
+		# Rule 3 
+		if x > 0 and ([0, y]):
+			temp_node = [0, y]
+			queue.append(temp_node)
+			visited_nodes.append(temp_node)
 
-		# Rule 4 :
-		if current_node[1] > jug2_capacity and ([jug1_capacity, 0] not in visited_nodes):
-			front.append([jug1_capacity, 0])
-			visited_nodes.append([jug1_capacity, 0])
+		# Rule 4 
+		if y > 0 and ([x, 0]):
+			temp_node = [x, 0]
+			queue.append(temp_node)
+			visited_nodes.append(temp_node)
 
-		# Rule 5 :
-		if current_node[1] > 0 and ([min(x + y, jug1_capacity), max(0, x + y - jug1_capacity)] not in visited_nodes):
-			front.append([min(x + y, jug1_capacity), max(0, x + y - jug1_capacity)])
-			visited_nodes.append([min(x + y, jug1_capacity), max(0, x + y - jug1_capacity)])
+		# Rule 5
+		if x > 0 and (x + y) >= full_capacity_state[1] and ([x - (full_capacity_state[1] - y), full_capacity_state[1] ]):
+			temp_node = [x - (full_capacity_state[1] - y), full_capacity_state[1] ]
+			queue.append(temp_node)
+			visited_nodes.append(temp_node)
+   
+		# Rule 6 
+		if y > 0 and (x + y) >= full_capacity_state[0]  and ([full_capacity_state[0], y - (full_capacity_state[0] - x)]):
+			temp_node = [full_capacity_state[0], y - (full_capacity_state[0] - x)]
+			queue.append(temp_node)
+			visited_nodes.append(temp_node)
+   
+		# Rule 7
+		if x > 0 and (x+y) <= full_capacity_state[1] and ([0, x+y]):
+			temp_node = [0, x+y]
+			queue.append(temp_node)
+			visited_nodes.append(temp_node)
 
-		# Rule 6 :
-		if current_node[0] > 0  and ([max(0, x + y - jug2_capacity), min(x + y, jug2_capacity)] not in visited_nodes):
-			front.append([max(0, x + y - jug2_capacity), min(x + y, jug2_capacity)])
-			visited_nodes.append([max(0, x + y - jug2_capacity), min(x + y, jug2_capacity)])
-
+		# Rule 8 
+		if y > 0 and (x+y) <= full_capacity_state[0]  and ([x+y, 0]):
+			temp_node = [x+y, 0]
+			queue.append(temp_node)
+			visited_nodes.append(temp_node)
 	return "Not found"
 
-def checking(a, b):
-	if a == 0:
-		return b
-	return checking(b%a, a)
 
-# condition for getting a solution:
-# the goal state should be a multiple of checking(a,b)
-
-
-if end % checking(jug1_capacity,jug2_capacity) == 0 :
-    print(solution())
-else:
-    print("Couln't find a sollution")
+print(solution())
