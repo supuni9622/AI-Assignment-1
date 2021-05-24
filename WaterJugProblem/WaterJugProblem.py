@@ -39,6 +39,7 @@ def solution():
 		x = current_node[0]
 		y = current_node[1]
 		path.append(current_node)
+		visited_nodes.append(current_node)
   
 		# Base Case 
 		if x == goal_state[0] and y == goal_state[1]:
