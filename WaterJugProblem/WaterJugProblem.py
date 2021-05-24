@@ -23,10 +23,8 @@
 # 7 -->  Pour all water from 1st to 2nd  --> (0, x+y)
 # 8 -->  Pour all water from 2nd to 1st --> (x+y, 0)
 
-jug1_capacity = 4
-jug2_capacity = 3
 initial_state = [0,0]
-full_capacity_state = [4, 2]
+full_capacity_state = [4, 3]
 goal_state= [2,0]
 
 def solution():
@@ -36,15 +34,15 @@ def solution():
 	visited_nodes = []
  
 	while(not (not queue)):
-		print('queue', queue)
-		current_node = queue.pop(0)
+		# current_node = queue.pop(0)
+		current_node = queue[0]
 		x = current_node[0]
 		y = current_node[1]
 		path.append(current_node)
   
 		# Base Case 
 		if x == goal_state[0] and y == goal_state[1]:
-			print("Found!")
+			print("Found a path!")
 			return path
 		
 		temp_node = current_node.copy()
@@ -62,40 +60,41 @@ def solution():
 			visited_nodes.append(temp_node)
 
 		# Rule 3 
-		if x > 0 and ([0, y]):
+		if x > 0 and ([0, y] not in visited_nodes):
 			temp_node = [0, y]
 			queue.append(temp_node)
 			visited_nodes.append(temp_node)
 
 		# Rule 4 
-		if y > 0 and ([x, 0]):
+		if y > 0 and ([x, 0] not in visited_nodes):
 			temp_node = [x, 0]
 			queue.append(temp_node)
 			visited_nodes.append(temp_node)
 
 		# Rule 5
-		if x > 0 and (x + y) >= full_capacity_state[1] and ([x - (full_capacity_state[1] - y), full_capacity_state[1] ]):
+		if x > 0 and (x + y) >= full_capacity_state[1] and ([x - (full_capacity_state[1] - y), full_capacity_state[1] ] not in visited_nodes):
 			temp_node = [x - (full_capacity_state[1] - y), full_capacity_state[1] ]
 			queue.append(temp_node)
 			visited_nodes.append(temp_node)
    
 		# Rule 6 
-		if y > 0 and (x + y) >= full_capacity_state[0]  and ([full_capacity_state[0], y - (full_capacity_state[0] - x)]):
+		if y > 0 and (x + y) >= full_capacity_state[0]  and ([full_capacity_state[0], y - (full_capacity_state[0] - x)] not in visited_nodes):
 			temp_node = [full_capacity_state[0], y - (full_capacity_state[0] - x)]
 			queue.append(temp_node)
 			visited_nodes.append(temp_node)
    
 		# Rule 7
-		if x > 0 and (x+y) <= full_capacity_state[1] and ([0, x+y]):
+		if x > 0 and (x+y) <= full_capacity_state[1] and ([0, x+y] not in visited_nodes):
 			temp_node = [0, x+y]
 			queue.append(temp_node)
 			visited_nodes.append(temp_node)
 
 		# Rule 8 
-		if y > 0 and (x+y) <= full_capacity_state[0]  and ([x+y, 0]):
+		if y > 0 and (x+y) <= full_capacity_state[0]  and ([x+y, 0] not in visited_nodes):
 			temp_node = [x+y, 0]
 			queue.append(temp_node)
 			visited_nodes.append(temp_node)
+		queue.pop(0)
 	return "Not found"
 
 
